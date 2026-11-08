@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/((?!assets/|cup.svg).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

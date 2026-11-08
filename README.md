@@ -1,15 +1,17 @@
 # Study Break Night 🧋
 
+**[Open the repository](https://github.com/shounakm4/study-break-night)** · Local preview: `http://127.0.0.1:5174`
+
 A phone-friendly RSVP and check-in app for a NUS Students’ Computing Club study break at COM1 foyer, 7–9 pm. Attendees do not create accounts. Organisers share a private, live dashboard.
 
-Built for the Events Tech recruitment exercise. This is a student prototype, not an official club deployment. The event date and snack quantity must be confirmed before opening real registrations.
+Built for the Events Tech recruitment exercise. This is a student prototype, not an official club deployment. The event date must be confirmed before opening real registrations.
 
 ## Attendee flow
 
 1. Open the event page and read the date, venue and reservation policy.
 2. Enter a name, email and optional Telegram handle. The handle is for manual event-related contact by organisers; no Telegram bot is used.
 3. Submit an RSVP without logging in.
-4. The backend atomically reserves one cup if fewer than 150 active cup reservations exist. A snack is guaranteed only when a configured snack allocation is available.
+4. The backend atomically reserves one cup if fewer than 150 active cup reservations exist. Total RSVPs help organisers decide how many snacks to order; snacks have no app-enforced quota.
 5. See a ticket code and exact entitlements immediately. Once email delivery is configured, receive the same event details and ticket by email.
 6. Show the ticket at the door. Organisers record arrival and food collection separately.
 7. If cups are fully reserved, attendance is still allowed. The confirmation clearly says no bubble tea is reserved; it does not promise unavailable snacks.
@@ -19,10 +21,10 @@ A lost email does not cancel the RSVP. Retrying the same request must not create
 ## Organiser flow
 
 1. Open **Organiser desk** and log in with an individually approved organiser account.
-2. See total RSVPs, arrivals, reserved food and collected food.
+2. See total RSVPs, arrivals, cup reservations and collected bubble tea.
 3. Search by name, email or ticket code. See the optional Telegram handle for manual contact.
 4. Verify the attendee’s ticket and reservation status. Record arrival.
-5. Mark a cup and/or snack collected when handed over. The backend rejects repeat redemption, including simultaneous attempts from two phones.
+5. Mark a cup collected when handed over. The backend rejects repeat redemption, including simultaneous attempts from two phones.
 6. Other organisers’ screens refresh from shared database changes. After reconnecting, reload authoritative data before continuing.
 7. Download an Excel snapshot for planning or records. The spreadsheet is not used to redeem tickets or allocate stock.
 
@@ -54,19 +56,19 @@ flowchart TD
 
 ## Counts and reservation rules
 
-| Count | Meaning |
-| --- | --- |
-| RSVPs | People registered, including people without a cup reservation |
-| Arrivals | People recorded at the door |
-| Cups available to reserve | 150 minus active cup reservations |
-| Reserved cups not collected | Reserved cups minus cups collected |
-| Physical cups remaining | Initial stock minus actual cups distributed |
+| Count                       | Meaning                                                       |
+| --------------------------- | ------------------------------------------------------------- |
+| RSVPs                       | People registered, including people without a cup reservation |
+| Arrivals                    | People recorded at the door                                   |
+| Cups available to reserve   | 150 minus active cup reservations                             |
+| Reserved cups not collected | Reserved cups minus cups collected                            |
+| Physical cups remaining     | Initial stock minus actual cups distributed                   |
 
 Cup reservations are first-successful-RSVP-first-reserved. Registration order is determined in the database, not by who loaded the page first. Email and Telegram handle are not proof of student identity. One RSVP per normalised email prevents accidental duplicates but cannot stop one person using different addresses.
 
 A reservation belongs to its ticket. Uncollected cups are not automatically free stock for walk-ins. Cancellation and no-show release policy need organiser agreement; automatic releases are outside the initial version.
 
-Snack capacity is independent of the 150-cup limit. With an unknown snack quantity, the app says **snacks while stocks last**, rather than reserving unlimited snacks.
+Snacks have no quantity limit in this app. Organisers use the RSVP total to plan the snack order. Snack availability is not a database-backed reservation or guarantee.
 
 ## First iteration and preview mode
 
@@ -87,6 +89,7 @@ Without Supabase environment variables, the app runs in clearly labelled local p
 
 ```bash
 npm run check
+npm run format:check
 npm test
 npm run build
 ```
@@ -99,8 +102,8 @@ Frontend variables contain only the Supabase URL, publishable/anon key and event
 
 ## Scope and limitations
 
-- Event date and snack quantity are initially unconfirmed.
-- No Telegram automation, stamp rally, payments, cancellation workflow or offline redemption.
+- The event date is initially unconfirmed. Snack quantities are planned by organisers from RSVP totals.
+- No Telegram automation, stamp rally, QR scanning, payments, cancellation workflow or offline redemption. Ticket codes are searchable; QR scanning can follow later.
 - A ticket is a bearer credential; one-time redemption prevents reuse, not sharing before first collection. Organisers can compare the displayed name with the attendee.
 - Email may be delayed or filtered. The on-screen ticket remains valid.
 - Public RSVP endpoints need abuse controls; capacity transactions do not prove identity.
@@ -108,7 +111,7 @@ Frontend variables contain only the Supabase URL, publishable/anon key and event
 
 ## How AI was used
 
-Codex helped plan the flows and write the initial README, UI, database migration, functions and checks. Shounak is iterating on the design and behaviour. This is substantial AI assistance; the code should be reviewed and understood before submission. Keep this note updated with actual changes and corrections rather than inventing an AI mistake.
+Codex helped plan the flows and write the initial README, UI, database migration, functions and checks. Shounak is iterating on the design and behaviour. This is substantial AI assistance; the code should be reviewed and understood before submission. One correction during this iteration: the initial GitHub push used a rejected SSH key; Codex switched this repository to authenticated HTTPS. Snack quota assumptions were also removed after Shounak clarified that RSVP counts should drive snack ordering. Keep this note updated with actual changes and corrections.
 
 ## References
 
@@ -117,3 +120,12 @@ Codex helped plan the flows and write the initial README, UI, database migration
 - [Supabase Realtime](https://supabase.com/docs/guides/realtime/postgres-changes)
 - [Sending email from Supabase](https://supabase.com/docs/guides/functions/examples/send-emails)
 - [Vite on Vercel](https://vercel.com/docs/frameworks/frontend/vite)
+
+## Verified in the first iteration
+
+- 12 local tests pass, including the SQL migration in embedded Postgres, access restrictions, retry safety, capacity allocation and duplicate redemption.
+- TypeScript checking and the production build pass.
+- Browser preview exercised RSVP → ticket → organiser search → arrival → cup collection.
+- A downloaded Excel file was reopened and checked for the expected attendee and reservation data.
+- Attendee and organiser pages were visually checked at 390px phone width with no horizontal overflow.
+- Live Supabase, actual email delivery, cross-device hosted updates and Vercel deployment remain unverified until those accounts are configured.

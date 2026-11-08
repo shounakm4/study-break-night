@@ -1,0 +1,31 @@
+{
+  "name": "study-break-night",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5174",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4174",
+    "check": "tsc -b",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "format:check": "prettier --check src tests docs README.md *.json *.ts supabase/functions"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "exceljs": "^4.4.0",
+    "lucide-react": "^1.70.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6"
+  }
+}
