@@ -18,6 +18,12 @@ before(async () => {
       'utf8',
     ),
   );
+  await db.exec(
+    readFileSync(
+      new URL('../supabase/migrations/202611090002_nus_email.sql', import.meta.url),
+      'utf8',
+    ),
+  );
 });
 after(() => db.close());
 
@@ -51,7 +57,7 @@ async function asUser<T>(role: string, userId: string, run: () => Promise<T>) {
 test('database allocates exactly 150 cups across 151 submissions, with no snack quota', async () => {
   const id = await event();
   const receipts = await Promise.all(
-    Array.from({ length: 151 }, (_, index) => reserve(id, `student${index}@example.com`)),
+    Array.from({ length: 151 }, (_, index) => reserve(id, `student${index}@u.nus.edu`)),
   );
   assert.equal(receipts.filter((row) => row.bubble_tea_reserved).length, 150);
   assert.equal(receipts.length, 151);
@@ -61,18 +67,18 @@ test('database allocates exactly 150 cups across 151 submissions, with no snack 
 test('database retries return one reservation and duplicate-email requests reveal no ticket', async () => {
   const id = await event(1);
   const request = crypto.randomUUID();
-  const first = await reserve(id, 'student@example.com', request);
-  const retry = await reserve(id, 'student@example.com', request);
+  const first = await reserve(id, 'student@u.nus.edu', request);
+  const retry = await reserve(id, 'student@u.nus.edu', request);
   assert.equal(first.id, retry.id);
-  await assert.rejects(() => reserve(id, ' STUDENT@EXAMPLE.COM '), /already has an RSVP/);
-  assert.equal((await reserve(id, 'second@example.com')).bubble_tea_reserved, false);
+  await assert.rejects(() => reserve(id, ' STUDENT@U.NUS.EDU '), /already has an RSVP/);
+  assert.equal((await reserve(id, 'second@u.nus.edu')).bubble_tea_reserved, false);
 });
 
 test('anonymous clients cannot read attendees or call reservation/redemption functions directly', async () => {
   const id = await event();
   await asUser('anon', '', async () => {
     await assert.rejects(() => db.query('select * from public.rsvps'), /permission denied/);
-    await assert.rejects(() => reserve(id, 'blocked@example.com'), /permission denied/);
+    await assert.rejects(() => reserve(id, 'blocked@u.nus.edu'), /permission denied/);
     await assert.rejects(
       () => db.query('select public.redeem_ticket($1,$2)', [crypto.randomUUID(), 'arrive']),
       /permission denied/,
@@ -88,7 +94,7 @@ test('anonymous clients cannot read attendees or call reservation/redemption fun
 
 test('logged-in non-organisers cannot read or redeem another event’s attendees', async () => {
   const id = await event();
-  const row = await reserve(id, 'private@example.com');
+  const row = await reserve(id, 'private@u.nus.edu');
   await asUser('authenticated', strangerId, async () => {
     assert.equal((await db.query('select * from public.rsvps')).rows.length, 0);
     await assert.rejects(
@@ -104,8 +110,8 @@ test('logged-in non-organisers cannot read or redeem another event’s attendees
 
 test('approved organisers redeem a reserved cup once, after arrival, with audit IDs', async () => {
   const id = await event(1);
-  const row = await reserve(id, 'arriving@example.com');
-  const overflow = await reserve(id, 'overflow@example.com');
+  const row = await reserve(id, 'arriving@u.nus.edu');
+  const overflow = await reserve(id, 'overflow@u.nus.edu');
   await db.query('insert into public.organisers values ($1,$2)', [id, staffId]);
   await asUser('authenticated', staffId, async () => {
     assert.equal(
@@ -135,11 +141,41 @@ test('approved organisers redeem a reserved cup once, after arrival, with audit 
 
 test('real event remains closed until a date is configured', async () => {
   await assert.rejects(
-    () => reserve('11111111-1111-4111-8111-111111111111', 'closed@example.com'),
+    () => reserve('11111111-1111-4111-8111-111111111111', 'closed@u.nus.edu'),
     /not open yet/,
   );
   await assert.rejects(
     () => db.exec('update public.events set reservations_open=true where starts_at is null'),
     /check constraint/,
+  );
+});
+
+test('database rejects non-NUS domains and lookalikes without consuming cup capacity', async () => {
+  const id = await event(1);
+  for (const email of [
+    'student@gmail.com',
+    'student@nus.edu.sg',
+    'student@sub.u.nus.edu',
+    'student@u.nus.edu.evil.com',
+    'student@@u.nus.edu',
+    '@u.nus.edu',
+  ]) {
+    await assert.rejects(() => reserve(id, email), /@u\.nus\.edu/);
+  }
+  const rows = await db.query('select id from public.rsvps where event_id=$1', [id]);
+  assert.equal(rows.rows.length, 0);
+  assert.equal((await reserve(id, 'student@u.nus.edu')).bubble_tea_reserved, true);
+});
+
+test('database constraint also rejects a direct non-NUS insert', async () => {
+  const id = await event();
+  await assert.rejects(
+    () =>
+      db.query(
+        `insert into public.rsvps(event_id,name,email,request_id,bubble_tea_reserved)
+    values ($1,'Invalid Student','student@gmail.com',$2,true)`,
+        [id, crypto.randomUUID()],
+      ),
+    /rsvps_nus_student_email/,
   );
 });

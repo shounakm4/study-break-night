@@ -252,7 +252,9 @@ function AttendeePage({
                     ? 'Preview ticket only. No email was sent.'
                     : ticket.email_status === 'accepted'
                       ? `Confirmation email requested for ${ticket.email}. Check spam too; keep this ticket if delivery is delayed.`
-                      : 'Your RSVP is saved, but email could not be sent. Save this ticket code or take a screenshot.'}
+                      : ticket.email_status === 'not_configured'
+                        ? 'Your RSVP is saved. Email confirmations are not set up yet; save this ticket code or take a screenshot.'
+                        : 'Your RSVP is saved, but email could not be sent. Save this ticket code or take a screenshot.'}
                 </p>
                 <button className="button secondary full" onClick={startAgain}>
                   Register another person <ArrowRight size={16} />
@@ -299,19 +301,25 @@ function AttendeePage({
                     onChange={(e) => setName(e.target.value)}
                   />
                   <label htmlFor="email">
-                    Email address <span>*</span>
+                    NUS student email <span>*</span>
                   </label>
                   <input
                     id="email"
                     name="email"
                     type="email"
+                    pattern={String.raw`[^\s@]+@[uU]\.[nN][uU][sS]\.[eE][dD][uU]`}
+                    title="Use your NUS student email ending in @u.nus.edu."
                     autoComplete="email"
                     required
                     maxLength={254}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  <small>Your confirmation ticket goes here.</small>
+                  <small>
+                    {previewMode
+                      ? 'Use your @u.nus.edu address. Preview mode does not send email.'
+                      : 'Use your @u.nus.edu address. Your confirmation ticket goes here.'}
+                  </small>
                   <label htmlFor="telegram">
                     Telegram handle <em>optional</em>
                   </label>

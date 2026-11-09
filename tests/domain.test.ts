@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { normaliseInput, getStats, filterRsvps, eventDate } from '../src/lib/domain.ts';
 import { initialDemoState, reserveInState, updateInState } from '../src/lib/demo.ts';
 
-const input = (email = 'student@example.com') => ({
+const input = (email = 'student@u.nus.edu') => ({
   name: '  Jamie   Tan  ',
   email,
   telegram: '@jamie_tan',
@@ -11,8 +11,8 @@ const input = (email = 'student@example.com') => ({
 });
 
 test('normalises email and optional Telegram without inventing identity verification', () => {
-  const result = normaliseInput(input(' STUDENT@EXAMPLE.COM '));
-  assert.equal(result.email, 'student@example.com');
+  const result = normaliseInput(input(' STUDENT@U.NUS.EDU '));
+  assert.equal(result.email, 'student@u.nus.edu');
   assert.equal(result.name, 'Jamie Tan');
   assert.equal(result.telegram, 'jamie_tan');
   assert.equal(normaliseInput({ ...input(), telegram: '' }).telegram, '');
@@ -34,8 +34,8 @@ test('preview retries reserve once, but another request cannot recover a ticket 
 
 test('last preview cup is reserved once and overflow RSVPs remain welcome', () => {
   const state = { rows: [], requests: {} };
-  const first = reserveInState(state, input('one@example.com'), 1);
-  const second = reserveInState(state, input('two@example.com'), 1);
+  const first = reserveInState(state, input('one@u.nus.edu'), 1);
+  const second = reserveInState(state, input('two@u.nus.edu'), 1);
   assert.equal(first.bubble_tea_reserved, true);
   assert.equal(second.bubble_tea_reserved, false);
   assert.equal(getStats(state.rows, 1).rsvps, 2);
@@ -67,4 +67,29 @@ test('search and filters use ticket, email, handle and actual collection status'
 test('event date stays unconfirmed until set and formats explicitly in Singapore', () => {
   assert.equal(eventDate(null), 'Date to be confirmed');
   assert.match(eventDate('2026-11-25T17:00:00Z'), /26 November/);
+});
+
+test('only the exact NUS student domain is accepted after trimming and lowercasing', () => {
+  assert.equal(normaliseInput(input(' STUDENT@U.NUS.EDU ')).email, 'student@u.nus.edu');
+  for (const email of [
+    'student@gmail.com',
+    'student@nus.edu.sg',
+    'student@sub.u.nus.edu',
+    'student@u.nus.edu.evil.com',
+    'student@@u.nus.edu',
+    '@u.nus.edu',
+    'student @u.nus.edu',
+  ]) {
+    assert.throws(() => normaliseInput(input(email)), /@u\.nus\.edu/);
+  }
+});
+
+test('rejected email and case-variant duplicates do not change preview cup counts', () => {
+  const state = { rows: [], requests: {} };
+  assert.throws(() => reserveInState(state, input('student@gmail.com'), 150));
+  assert.equal(state.rows.length, 0);
+  reserveInState(state, input('STUDENT@U.NUS.EDU'), 150);
+  assert.throws(() => reserveInState(state, input(' student@u.nus.edu '), 150), /already has/);
+  assert.equal(getStats(state.rows, 150).reserved, 1);
+  assert.equal(getStats(state.rows, 150).available, 149);
 });

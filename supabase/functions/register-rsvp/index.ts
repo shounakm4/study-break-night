@@ -1,4 +1,5 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { isNusStudentEmail } from '../_shared/email.ts';
 
 const escapeHtml = (value: string) =>
   value.replace(
@@ -40,12 +41,13 @@ Deno.serve(async (request) => {
     const name = body.name.trim().replace(/\s+/g, ' ');
     const email = body.email.trim().toLowerCase();
     const telegram = body.telegram.trim().replace(/^@/, '');
+    if (!isNusStudentEmail(email)) {
+      return respond({ error: 'Please use your NUS student email ending in @u.nus.edu.' }, 400);
+    }
     const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (
       name.length < 2 ||
       name.length > 80 ||
-      email.length > 254 ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
       (telegram && !/^[A-Za-z0-9_]{5,32}$/.test(telegram)) ||
       !uuid.test(body.requestId) ||
       !uuid.test(body.eventId)
@@ -76,6 +78,7 @@ Deno.serve(async (request) => {
     if (error) {
       const safe = [
         'RSVPs are not open yet.',
+        'Please use your NUS student email ending in @u.nus.edu.',
         'Event not found.',
         'This email already has an RSVP. Check your confirmation ticket or ask an organiser.',
         'Too many registrations. Please try again shortly.',

@@ -9,7 +9,7 @@ Built for the Events Tech recruitment exercise. This is a student prototype, not
 ## Attendee flow
 
 1. Open the event page and read the date, venue and reservation policy.
-2. Enter a name, email and optional Telegram handle. The handle is for manual event-related contact by organisers; no Telegram bot is used.
+2. Enter a name, NUS student email ending in `@u.nus.edu`, and optional Telegram handle. The handle is for manual event-related contact by organisers; no Telegram bot is used.
 3. Submit an RSVP without logging in.
 4. The backend atomically reserves one cup if fewer than 150 active cup reservations exist. Total RSVPs help organisers decide how many snacks to order; snacks have no app-enforced quota.
 5. See a ticket code and exact entitlements immediately. Once email delivery is configured, receive the same event details and ticket by email.
@@ -64,7 +64,7 @@ flowchart TD
 | Reserved cups not collected | Reserved cups minus cups collected                            |
 | Physical cups remaining     | Initial stock minus actual cups distributed                   |
 
-Cup reservations are first-successful-RSVP-first-reserved. Registration order is determined in the database, not by who loaded the page first. Email and Telegram handle are not proof of student identity. One RSVP per normalised email prevents accidental duplicates but cannot stop one person using different addresses.
+Cup reservations are first-successful-RSVP-first-reserved. Registration order is determined in the database, not by who loaded the page first. Email and Telegram handle are not proof of student identity. Only the exact `@u.nus.edu` domain is accepted, with whitespace trimmed and case normalised. One RSVP per event/email is enforced in Postgres. The form and Edge Function also validate the domain, and the database has its own constraint. Domain validation does not prove mailbox ownership; email verification is not implemented, so someone could still enter another student’s address or use aliases.
 
 A reservation belongs to its ticket. Uncollected cups are not automatically free stock for walk-ins. Cancellation and no-show release policy need organiser agreement; automatic releases are outside the initial version.
 
@@ -123,7 +123,7 @@ Codex helped plan the flows and write the initial README, UI, database migration
 
 ## Verified in the first iteration
 
-- 12 local tests pass, including the SQL migration in embedded Postgres, access restrictions, retry safety, capacity allocation and duplicate redemption.
+- 16 local tests pass, including the SQL migration in embedded Postgres, access restrictions, retry safety, NUS-only email validation, capacity allocation and duplicate redemption.
 - TypeScript checking and the production build pass.
 - Browser preview exercised RSVP → ticket → organiser search → arrival → cup collection.
 - A downloaded Excel file was reopened and checked for the expected attendee and reservation data.

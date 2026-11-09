@@ -1,3 +1,4 @@
+import { isNusStudentEmail } from '../../supabase/functions/_shared/email';
 import type { DeskStats, RegistrationInput, Rsvp } from './types';
 
 export function normaliseInput(input: RegistrationInput): RegistrationInput {
@@ -6,8 +7,8 @@ export function normaliseInput(input: RegistrationInput): RegistrationInput {
   const telegram = input.telegram.trim().replace(/^@/, '');
   if (name.length < 2 || name.length > 80)
     throw new Error('Please enter a name between 2 and 80 characters.');
-  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-    throw new Error('Please enter a valid email address.');
+  if (!isNusStudentEmail(email))
+    throw new Error('Please use your NUS student email ending in @u.nus.edu.');
   if (telegram && !/^[A-Za-z0-9_]{5,32}$/.test(telegram))
     throw new Error('Use a Telegram username with 5–32 letters, numbers or underscores.');
   if (!/^[0-9a-f-]{36}$/i.test(input.requestId)) throw new Error('Please refresh and try again.');
