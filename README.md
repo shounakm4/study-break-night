@@ -10,6 +10,14 @@ Built for the Events Tech recruitment exercise. This is a student prototype, not
 
 ## Why I chose this approach
 
+> I chose the app to work like this cuz the organiser needs a simple registration and rsvp workflow, the telegram part would have been too complicated to do within a short time frame so i decided to stick with nus mail(it sents them a message there), the form still takes the users tele incase the organiser wants to confirm the attendee wants to come on the day itself but is late.
+>
+> I made it simple and added a few fun elements to it(even tho it is AI generated but i believe a user is barely on the RSVP page for like a good 2 minutes just to register and get event info.).
+>
+> I also added a organiser dashboard, for which they have to log in on the day itself and where they can see all the stats, like the RSVP numbers, so the comm can get their food quantity estimate and then can easily check in a registered person by typing their name and confirming(maybe if i had more time will add QR code confirmation from a QR code sent to attendees mail).
+
+**Additional notes**
+
 I chose this setup because the organiser needs a simple registration and RSVP workflow. Attendees should be able to read the event details, register and get their ticket without creating an account. React handles the page, and Supabase provides the shared database and organiser login once connected.
 
 The Telegram messaging part would have added too much setup for the short time frame, so I chose confirmation emails to NUS student addresses instead. The email integration is prepared but is not sending messages in the current preview. The form still takes an optional Telegram handle in case an organiser needs to contact someone about the event, for example to check whether a late attendee is still coming.
@@ -134,6 +142,12 @@ Frontend variables contain only the Supabase URL, publishable/anon key and event
 - The live deployment must be tested with two organiser phones and competing requests before real use. Local tests do not establish hosted service performance or email deliverability.
 
 ## AI note
+
+> To be very honest, i completely vibe coded this app while using iterative UI and logic development and cotinuous testing of the live page.
+>
+> As a events tech, with not much time(esp w a pile of my own tutorials waiting for me😭) i believe this is the workflow i would go for as long as i am able to test it and check it works with multiple users and it achieves the objective, so yes this would not have been possible in the span of 2-3 hours without the help of my best friend(codex) but i believe as long as i am aware of the backend logic and personally enhance UI then it should be ok.
+
+**Additional notes**
 
 To be very honest, I completely vibe coded this app with Codex, using iterative UI and logic development and repeatedly testing the local preview page. Codex helped write the React UI, database migrations, backend functions, tests and documentation, including helping me edit this note. This was substantial code generation, not just autocomplete.
 
