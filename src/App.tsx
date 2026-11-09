@@ -208,6 +208,7 @@ function AttendeePage({
               <span>We’ll confirm the date before real RSVPs open.</span>
             )}
           </div>
+          <p className="snack-teaser">hearsay snacks are included as well...👀😋</p>
           <img
             className="study-illustration"
             src="/study-break-students.svg"
