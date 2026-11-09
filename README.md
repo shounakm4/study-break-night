@@ -10,21 +10,15 @@ Built for the Events Tech recruitment exercise. This is a student prototype, not
 
 ## Why I chose this approach
 
-> I chose the app to work like this cuz the organiser needs a simple registration and rsvp workflow, the telegram part would have been too complicated to do within a short time frame so i decided to stick with nus mail(it sents them a message there), the form still takes the users tele incase the organiser wants to confirm the attendee wants to come on the day itself but is late.
->
-> I made it simple and added a few fun elements to it(even tho it is AI generated but i believe a user is barely on the RSVP page for like a good 2 minutes just to register and get event info.).
->
-> I also added a organiser dashboard, for which they have to log in on the day itself and where they can see all the stats, like the RSVP numbers, so the comm can get their food quantity estimate and then can easily check in a registered person by typing their name and confirming(maybe if i had more time will add QR code confirmation from a QR code sent to attendees mail).
+I chose the app to work like this cuz the organiser needs a simple registration and rsvp workflow, the telegram part would have been too complicated to do within a short time frame so i decided to stick with nus mail(it sents them a message there), the form still takes the users tele incase the organiser wants to confirm the attendee wants to come on the day itself but is late.
 
-**Additional notes**
+I made it simple and added a few fun elements to it(even tho it is AI generated but i believe a user is barely on the RSVP page for like a good 2 minutes just to register and get event info.).
 
-I chose this setup because the organiser needs a simple registration and RSVP workflow. Attendees should be able to read the event details, register and get their ticket without creating an account. React handles the page, and Supabase provides the shared database and organiser login once connected.
+I also added a organiser dashboard, for which they have to log in on the day itself and where they can see all the stats, like the RSVP numbers, so the comm can get their food quantity estimate and then can easily check in a registered person by typing their name and confirming(maybe if i had more time will add QR code confirmation from a QR code sent to attendees mail).
 
-The Telegram messaging part would have added too much setup for the short time frame, so I chose confirmation emails to NUS student addresses instead. The email integration is prepared but is not sending messages in the current preview. The form still takes an optional Telegram handle in case an organiser needs to contact someone about the event, for example to check whether a late attendee is still coming.
+For the setup i went with react for the webpage and supabase for the shared data and organiser login. Attendees dont need to log in at all, only the organisers do. The dashboard also lets them export an excel copy for planning, but check in happens in the app so everyone is working with the same records.
 
-I kept the page simple and added a few fun elements, including bubble tea and students taking a break. The illustrations are AI-generated. I expect someone to spend around two minutes on the RSVP page to register and get the event information, so I wanted the form to stay easy to find and quick to complete.
-
-The organiser dashboard gives the committee RSVP numbers for estimating snack quantities and a way to check people in on the day. Only organisers need to log in, and they can also use the dashboard beforehand for planning. They search for an attendee by name, email or ticket code, confirm the matching ticket, then record arrival and cup collection. Searching a name alone does not authenticate someone. With more time, I would add a QR code to the confirmation email so organisers could scan tickets at the door.
+For the bbt count, each nus email can only RSVP once per event and the backend decides who gets the last cup, so two ppl registering together cant both get cup number 150. Once all 150 are reserved ppl can still RSVP without bbt, and they still count towards the food estimate. At the door the organiser should confirm the ticket as well, typing a name is just to find the registration.
 
 ## Attendee flow
 
@@ -143,19 +137,13 @@ Frontend variables contain only the Supabase URL, publishable/anon key and event
 
 ## AI note
 
-> To be very honest, i completely vibe coded this app while using iterative UI and logic development and cotinuous testing of the live page.
->
-> As a events tech, with not much time(esp w a pile of my own tutorials waiting for me😭) i believe this is the workflow i would go for as long as i am able to test it and check it works with multiple users and it achieves the objective, so yes this would not have been possible in the span of 2-3 hours without the help of my best friend(codex) but i believe as long as i am aware of the backend logic and personally enhance UI then it should be ok.
+To be very honest, i completely vibe coded this app while using iterative UI and logic development and cotinuous testing of the live page.
 
-**Additional notes**
+As a events tech, with not much time(esp w a pile of my own tutorials waiting for me😭) i believe this is the workflow i would go for as long as i am able to test it and check it works with multiple users and it achieves the objective, so yes this would not have been possible in the span of 2-3 hours without the help of my best friend(codex) but i believe as long as i am aware of the backend logic and personally enhance UI then it should be ok.
 
-To be very honest, I completely vibe coded this app with Codex, using iterative UI and logic development and repeatedly testing the local preview page. Codex helped write the React UI, database migrations, backend functions, tests and documentation, including helping me edit this note. This was substantial code generation, not just autocomplete.
+To be specific, codex helped write the react components, database setup, backend functions, tests and readme(including helping with this note). One assumption i had to correct was the snack quota, cuz we only need the RSVP count to estimate food, not reserve a fixed number of snacks.
 
-As an events tech member with limited time (especially with a pile of my own tutorials waiting for me 😭), this is the workflow I would go for, provided I can understand the backend logic and test that the app achieves the organiser’s objective. This would not have been possible in the intended 2–3 hour window without my best friend, Codex. I directed the design changes and behaviour through feedback, including the club colours, simpler form, email restrictions and dashboard workflow.
-
-One assumption I corrected during development was snack allocation: the app initially treated snacks as a limited reservation, but the organiser needs RSVP numbers to decide how much food to order. I removed the snack quota while keeping the 150-cup reservation limit.
-
-I have tested the local preview through registration and check-in, and Codex ran the automated checks listed below. Testing the preview repeatedly is different from testing a live event with multiple users. Supabase, actual email delivery and cross-phone updates still need to be configured and verified before I can claim that workflow works in real use. I am responsible for understanding and reviewing the generated code, including the allocation, duplicate-email and organiser-access rules.
+Also when i say testing the live page above, so far thats the local browser preview. Supabase and email still need to be connected, so no emails are being sent yet and the preview data isnt shared across phones. Codex ran the automated checks, but i still need to test with multiple phones and ppl registering at the same time once the backend is connected.
 
 ## References
 
