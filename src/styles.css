@@ -168,6 +168,9 @@ h1 {
   font-size: 12px;
   color: #667080;
 }
+.calendar-download {
+  margin-top: 18px;
+}
 .rsvp-column {
   min-width: 0;
 }

@@ -24,7 +24,7 @@ For this trial i decided not to buy a domain just for sending emails, so attende
 
 ## Attendee flow
 
-1. Open the event page and read the date, venue and reservation policy.
+1. Open the event page and read the date, venue and reservation policy. Use **Add to calendar** below the event details to download an `.ics` file with the event time, venue and public page link. Saving it does not create an RSVP.
 2. Enter a name, NUS student email ending in `@u.nus.edu`, and optional Telegram handle. The handle is for manual event-related contact by organisers; no Telegram bot is used.
 3. Submit an RSVP without logging in.
 4. The backend atomically reserves one cup if fewer than 150 active cup reservations exist. Total RSVPs help organisers decide how many snacks to order; snacks have no app-enforced quota.
@@ -157,7 +157,7 @@ Also when i say testing the live page above, the first checks were on the local 
 
 ## Verified in the first iteration
 
-- 16 local tests pass, including the SQL migration in embedded Postgres, access restrictions, retry safety, NUS-only email validation, capacity allocation and duplicate redemption.
+- 19 local tests pass, including the SQL migration in embedded Postgres, access restrictions, retry safety, NUS-only email validation, capacity allocation and duplicate redemption.
 - TypeScript checking and the production build pass.
 - Browser preview exercised RSVP → ticket → organiser search → arrival → cup collection.
 - A downloaded Excel file was reopened and checked for the expected attendee and reservation data.

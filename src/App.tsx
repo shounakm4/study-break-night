@@ -34,6 +34,7 @@ import {
   supabase,
 } from './lib/api';
 import { eventDate, eventTime, filterRsvps, getStats } from './lib/domain';
+import { buildEventCalendar } from './lib/calendar';
 import type { EventSummary, Rsvp } from './lib/types';
 
 function errorMessage(error: unknown) {
@@ -132,6 +133,21 @@ function AttendeePage({
   const [copied, setCopied] = useState(false);
   const requestId = useRef(sessionStorage.getItem('study-break-request') || crypto.randomUUID());
   const remaining = summary ? Math.max(0, summary.event.cup_capacity - summary.reserved) : null;
+  const calendarText = summary ? buildEventCalendar(summary.event, window.location.origin) : null;
+  function downloadCalendar() {
+    if (!calendarText) return;
+    const url = URL.createObjectURL(
+      new Blob([calendarText], { type: 'text/calendar;charset=utf-8' }),
+    );
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'study-break.ics';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    // allow the browser to start the download before releasing the file
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
   useEffect(() => {
     sessionStorage.setItem('study-break-request', requestId.current);
   }, []);
@@ -192,6 +208,11 @@ function AttendeePage({
               <span>We’ll confirm the date before real RSVPs open.</span>
             )}
           </div>
+          {calendarText && (
+            <button className="button secondary calendar-download" onClick={downloadCalendar}>
+              <CalendarDays size={17} /> Add to calendar
+            </button>
+          )}
           <img
             className="study-illustration"
             src="/study-break-students.svg"
