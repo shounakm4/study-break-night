@@ -11,7 +11,7 @@ Production: https://study-break-night.vercel.app
 
 ## Email restriction
 
-No sender domain has been verified. `onboarding@resend.dev` can send only to the email associated with the Resend account. Resend reports one isolated test confirmation as delivered to the account email. Inbox placement still needs recipient confirmation. Other attendees retain a valid on-screen ticket even when email is rejected. Verify a domain you control, then replace `EMAIL_FROM` with an address on that domain before promising email delivery to everyone.
+No sender domain has been verified. `onboarding@resend.dev` can send only to the email associated with the Resend account. The account owner confirmed receiving an isolated test confirmation in their inbox. Other attendees retain a valid on-screen ticket even when email is rejected. Verify a domain you control, then replace `EMAIL_FROM` with an address on that domain before promising email delivery to everyone.
 
 ## Future updates
 
@@ -21,4 +21,4 @@ Both SQL migration files were applied through the SQL editor. They are not yet r
 
 The dashboard deployment bundled the shared email validator into the registration function. Future CLI deployments use the checked-in function and its shared module directly.
 
-Multi-phone Realtime updates, competing hosted requests and inbox placement still need verification. The local test suite and a hosted allocation transaction do not replace those checks.
+The account owner successfully signed into the deployed organiser dashboard. Multi-phone Realtime updates and competing hosted requests still need verification. The local test suite and a hosted allocation transaction do not replace those checks.

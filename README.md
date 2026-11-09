@@ -6,7 +6,7 @@ A phone-friendly RSVP and check-in app for a NUS Students’ Computing Club stud
 
 Built for the Events Tech recruitment exercise. This is a student prototype, not an official club deployment. The deployed event uses the assumed date of 12 November 2026, 7–9 pm Singapore time.
 
-**Current status:** the Vercel site is connected to a live Supabase database in Singapore. Registration and organiser access are configured. Resend reports a confirmation email as delivered to the account owner during an isolated test. There is no verified sender domain yet, so Resend currently permits email only to the Resend account address. Other attendees must save their on-screen ticket until a sender domain is verified. Local development without Supabase configuration still uses browser-local preview mode.
+**Current status:** the Vercel site is connected to a live Supabase database in Singapore. Registration and organiser access are configured. The account owner confirmed receipt of a test confirmation email. There is no verified sender domain yet, so Resend currently permits email only to the Resend account address. Other attendees must save their on-screen ticket until a sender domain is verified. Local development without Supabase configuration still uses browser-local preview mode.
 
 ## Why I chose this approach
 
@@ -168,6 +168,7 @@ Also when i say testing the live page above, the first checks were on the local 
 - The hosted registration function rejects non-NUS emails and respects closed registrations (checked before setting the event date).
 - A hosted transaction allocated exactly 150 cups across 151 fictional registrations and preserved the count on retry. These verification rows were rolled back.
 - On a separate test event, Resend accepted a confirmation to the account email. Retrying returned the same ticket; a case-variant duplicate was rejected and only one cup remained reserved.
-- Resend reports the test email as delivered; inbox placement still needs recipient confirmation. Multi-phone dashboard updates and competing hosted requests remain to be checked.
+- The account owner confirmed the test email reached their inbox and successfully signed into the live organiser dashboard. The dashboard showed the real event with zero RSVPs and a live connection.
+- Multi-phone dashboard updates and competing hosted requests remain to be checked.
 
 See [deployment notes](docs/deployment.md) for the configured services, email restriction and future deployment steps.
