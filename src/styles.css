@@ -82,12 +82,6 @@ p {
 .hero-story {
   padding-top: 30px;
 }
-.event-logo {
-  display: block;
-  width: 78px;
-  height: auto;
-  margin-bottom: 30px;
-}
 h1 {
   color: var(--navy);
   font-size: 64px;
@@ -904,10 +898,6 @@ form > small {
   }
   .hero-story {
     padding-top: 0;
-  }
-  .event-logo {
-    width: 54px;
-    margin-bottom: 24px;
   }
   h1 {
     font-size: 46px;

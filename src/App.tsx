@@ -102,7 +102,7 @@ function App() {
       <footer className="site-footer wrap">
         <span className="footer-organiser">
           <img src="/comclub-logo.webp" alt="Computing Club logo" />
-          <span>Organised by NUS Student's Comp Club</span>
+          <span>Organised by NUS Student's Computing Club</span>
         </span>
         {!organiser && <a href="/organiser">Organiser sign in</a>}
       </footer>
@@ -170,11 +170,6 @@ function AttendeePage({
     <main>
       <section className="hero wrap">
         <div className="hero-story">
-          <img
-            className="event-logo"
-            src="/comclub-logo.webp"
-            alt="NUS Students’ Computing Club logo"
-          />
           <h1 className="study-title">
             Study Break
             <svg className="title-underline" viewBox="0 0 360 18" aria-hidden="true">
@@ -296,7 +291,7 @@ function AttendeePage({
                     id="name"
                     name="name"
                     autoComplete="name"
-                    placeholder="Your name"
+
                     required
                     minLength={2}
                     maxLength={80}
@@ -311,7 +306,6 @@ function AttendeePage({
                     name="email"
                     type="email"
                     autoComplete="email"
-                    placeholder="you@u.nus.edu"
                     required
                     maxLength={254}
                     value={email}
@@ -321,18 +315,14 @@ function AttendeePage({
                   <label htmlFor="telegram">
                     Telegram handle <em>optional</em>
                   </label>
-                  <div className="input-prefix">
-                    <span>@</span>
-                    <input
-                      id="telegram"
-                      name="telegram"
-                      placeholder="your_username"
-                      autoComplete="off"
-                      maxLength={33}
-                      value={telegram}
-                      onChange={(e) => setTelegram(e.target.value)}
-                    />
-                  </div>
+                  <input
+                    id="telegram"
+                    name="telegram"
+                    autoComplete="off"
+                    maxLength={33}
+                    value={telegram}
+                    onChange={(e) => setTelegram(e.target.value)}
+                  />
                   <small>Only for organisers to contact you about this event.</small>
                   <label className="consent">
                     <input type="checkbox" required />
