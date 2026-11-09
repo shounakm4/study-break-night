@@ -239,6 +239,11 @@ function AttendeePage({
                     {copied ? 'Copied!' : 'Copy code'}
                   </button>
                 </div>
+                <p className="notice">
+                  <strong>Screenshot your ticket before closing this page 📸</strong>
+                  <br />
+                  Show it to an organiser when you arrive.
+                </p>
                 <div className="ticket-entitlement">
                   <Coffee size={18} />
                   <span>
