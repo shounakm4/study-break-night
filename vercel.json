@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!assets/|cup.svg).*)",
+      "source": "/((?!assets/|comclub-logo.webp).*)",
       "destination": "/index.html"
     }
   ]

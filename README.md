@@ -76,7 +76,7 @@ The first iteration includes an attendee page, reservation result, organiser des
 
 Supabase live mode requires project configuration, migrations, an approved organiser account, and function deployment. Real email additionally requires a Resend account and verified sender domain. These external services are not provisioned by running the frontend.
 
-The UI uses the club website’s navy `#365486` and blue `#61afef`, with warm cream, tea-coloured accents and a study-break theme. No official endorsement is implied.
+The UI follows the supplied club website reference: white background, navy `#365486`, light blue `#61afef`, and the user-provided Computing Club logo. The event title is Study Break, with the organiser subtitle directly below it. No official endorsement is implied.
 
 ## Local development
 

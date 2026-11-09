@@ -1,18 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import {
-  ArrowDown,
   ArrowLeft,
   ArrowRight,
   CalendarDays,
   Check,
   CheckCircle2,
-  ChevronRight,
   Clock3,
   Coffee,
   Download,
   ExternalLink,
-  Heart,
   LoaderCircle,
   LogOut,
   MapPin,
@@ -46,68 +43,6 @@ function Busy() {
   return <LoaderCircle className="spin" size={18} aria-label="Loading" />;
 }
 
-function CupArt() {
-  return (
-    <div className="tea-art" aria-hidden="true">
-      <span className="art-star star-one">✳</span>
-      <span className="art-star star-two">✦</span>
-      <span className="art-note">a little sip of sanity</span>
-      <div className="tea-halo" />
-      <div className="tea-straw" />
-      <div className="tea-cup">
-        <div className="tea-shine" />
-        <div className="tea-label">
-          <Coffee size={32} />
-          <span>
-            TAKE
-            <br />A BREAK
-          </span>
-        </div>
-        <div className="pearls">
-          {Array.from({ length: 10 }, (_, i) => (
-            <i key={i} />
-          ))}
-        </div>
-      </div>
-      <div className="tea-lid" />
-      <div className="art-sticker">
-        <Heart size={15} /> made for your study break
-      </div>
-    </div>
-  );
-}
-
-function Header({ organiser = false }: { organiser?: boolean }) {
-  return (
-    <header className="site-header wrap">
-      <a href="/" className="brand" aria-label="Study Break Night home">
-        <span className="brand-mark">
-          C<span>C</span>
-        </span>
-        <span>
-          COMPUTING CLUB<small>STUDY BREAK SERIES</small>
-        </span>
-      </a>
-      <nav aria-label="Main navigation">
-        {organiser ? (
-          <a href="/">
-            <ArrowLeft size={15} /> Back to event
-          </a>
-        ) : (
-          <>
-            <a href="#the-plan" className="desktop-link">
-              The plan
-            </a>
-            <a href="/organiser" className="desk-link">
-              Organiser desk <ChevronRight size={15} />
-            </a>
-          </>
-        )}
-      </nav>
-    </header>
-  );
-}
-
 function App() {
   const [summary, setSummary] = useState<EventSummary | null>(null);
   const [error, setError] = useState('');
@@ -138,7 +73,17 @@ function App() {
           <span>Interactive preview · saved in this browser only · no emails sent</span>
         </div>
       )}
-      <Header organiser={organiser} />
+      {organiser && (
+        <div className="organiser-nav wrap">
+          <a href="/" className="organiser-brand">
+            <img src="/comclub-logo.webp" alt="NUS Computing Club" />
+            Study Break
+          </a>
+          <a href="/" className="back-link">
+            <ArrowLeft size={15} /> Back to event
+          </a>
+        </div>
+      )}
       {error && (
         <div className="wrap">
           <div className="notice error" role="alert">
@@ -155,8 +100,8 @@ function App() {
         <AttendeePage summary={summary} refresh={refresh} />
       )}
       <footer className="site-footer wrap">
-        <span>Made for the moments between deadlines.</span>
-        <span>Student recruitment prototype · NUS Computing community</span>
+        <span>Study Break · Student recruitment prototype</span>
+        {!organiser && <a href="/organiser">Organiser sign in</a>}
       </footer>
     </>
   );
@@ -222,21 +167,13 @@ function AttendeePage({
     <main>
       <section className="hero wrap">
         <div className="hero-story">
-          <div className="eyebrow">
-            <span className="little-dot" /> FINALS CAN WAIT A LITTLE.
-          </div>
-          <h1>
-            Close the tabs.
-            <br />
-            Take a <span>break.</span>
-            <svg className="headline-swish" viewBox="0 0 240 20" aria-hidden="true">
-              <path d="M5 13 Q110 -2 235 12" />
-            </svg>
-          </h1>
-          <p className="hero-description">
-            A little bubble tea. A few snacks. Your favourite people.
-            <br className="desktop-link" /> One evening to step away from the study grind.
-          </p>
+          <img
+            className="event-logo"
+            src="/comclub-logo.webp"
+            alt="NUS Students’ Computing Club logo"
+          />
+          <h1>Study Break</h1>
+          <p className="event-organiser">Organised by NUS Student's Computing Club</p>
           <div className="event-pills">
             <span>
               <MapPin size={16} /> {summary?.event.location || 'COM1 foyer'}
@@ -252,13 +189,12 @@ function AttendeePage({
               <span>We’ll confirm the date before real RSVPs open.</span>
             )}
           </div>
-          <CupArt />
         </div>
         <div className="rsvp-column" id="rsvp">
           <div className="rsvp-card">
             <div className="card-topline">
               <span>
-                <Ticket size={16} /> YOUR STUDY BREAK STARTS HERE
+                <Ticket size={16} /> STUDY BREAK REGISTRATION
               </span>
               <span>FREE ENTRY</span>
             </div>
@@ -317,8 +253,8 @@ function AttendeePage({
             ) : (
               <>
                 <div className="form-heading">
-                  <h2>Save your spot.</h2>
-                  <p>No account. No password. Just a well-earned pause.</p>
+                  <h2>RSVP</h2>
+                  <p>Enter your details to register.</p>
                 </div>
                 <div className={`availability ${remaining === 0 ? 'sold-out' : ''}`}>
                   <span className="availability-icon">
@@ -327,10 +263,10 @@ function AttendeePage({
                   <div>
                     <strong>
                       {remaining === null
-                        ? 'Checking the tea situation…'
+                        ? 'Loading availability…'
                         : remaining === 0
-                          ? 'All cups have found their people 🧋'
-                          : `${remaining} bubble teas still up for grabs`}
+                          ? 'All 150 bubble teas are reserved'
+                          : `${remaining} bubble teas available`}
                     </strong>
                     <span>
                       {remaining === 0
@@ -347,7 +283,7 @@ function AttendeePage({
                     id="name"
                     name="name"
                     autoComplete="name"
-                    placeholder="What should we call you?"
+                    placeholder="Your name"
                     required
                     minLength={2}
                     maxLength={80}
@@ -406,7 +342,7 @@ function AttendeePage({
                       <>
                         {summary && !summary.event.reservations_open
                           ? 'RSVPs haven’t opened yet'
-                          : 'Count me in'}{' '}
+                          : 'RSVP'}{' '}
                         <ArrowRight size={18} />
                       </>
                     )}
@@ -418,49 +354,8 @@ function AttendeePage({
               </>
             )}
           </div>
-          <div className="below-card">
-            <Sparkles size={17} />
-            <p>
-              Snacks are part of the plan.
-              <br />
-              <span>Your RSVP helps us figure out how much to order.</span>
-            </p>
-          </div>
+          <p className="snack-note">RSVP numbers help the organisers plan the snack order.</p>
         </div>
-      </section>
-      <section className="how-section wrap" id="the-plan">
-        <div className="section-heading">
-          <span className="eyebrow">LESS ADMIN. MORE GOOD VIBES.</span>
-          <h2>Your only plan for the night.</h2>
-        </div>
-        <div className="how-grid">
-          <article>
-            <span className="step-number">01</span>
-            <Ticket />
-            <h3>Drop us an RSVP.</h3>
-            <p>
-              Tell us you’re coming. We’ll save your details and let you know if a cup is reserved.
-            </p>
-          </article>
-          <article>
-            <span className="step-number">02</span>
-            <Users />
-            <h3>Bring your people.</h3>
-            <p>Come by COM1 foyer, 7–9 pm. Show your ticket to an organiser when you arrive.</p>
-          </article>
-          <article>
-            <span className="step-number">03</span>
-            <Coffee />
-            <h3>Take a proper break.</h3>
-            <p>
-              Claim your reserved drink, grab a snack if available, and leave the deadlines at the
-              door.
-            </p>
-          </article>
-        </div>
-        <a className="back-rsvp" href="#rsvp">
-          Sounds like a plan <ArrowDown size={16} />
-        </a>
       </section>
     </main>
   );
