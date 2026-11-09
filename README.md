@@ -8,6 +8,20 @@ Built for the Events Tech recruitment exercise. This is a student prototype, not
 
 **Current status:** the Vercel site is connected to a live Supabase database in Singapore. Registration and organiser access are configured. The account owner confirmed receipt of a test confirmation email. There is no verified sender domain yet, so Resend currently permits email only to the Resend account address. Other attendees must save their on-screen ticket until a sender domain is verified. Local development without Supabase configuration still uses browser-local preview mode.
 
+## Demo organiser account
+
+For testing the organiser side, use the separate demo login:
+
+- **Login page:** https://study-break-night.vercel.app/demo/organiser
+- **Email:** `demo.organiser@example.com`
+- **Password:** `StudyBreakDemo2026!`
+
+These credentials are intentionally public and only give access to a fictional demo event. They do not let you read or change the real attendee list. The demo uses the actual Supabase login and check-in functions, with separate event membership and database access rules.
+
+Once logged in, click **Reset demo data** to start with three fictional attendees: three cups reserved, two people arrived and one cup collected. Try searching for **Demo Guest 1**, marking them arrived, then marking their cup collected. You can also try the filters and Excel export. Reset the data whenever you want to repeat the flow.
+
+The demo records are shared, so another reviewer may change them while you test. Registration for this demo event is permanently closed so real attendee details cannot be added through the RSVP form. Its placeholder email addresses are fictional and no confirmation emails are sent for them. The normal organiser login at `/organiser` remains private.
+
 ## Why I chose this approach
 
 I chose the app to work like this cuz the organiser needs a simple registration and rsvp workflow, the telegram part would have been too complicated to do within a short time frame so i decided to stick with nus mail(it sents them a message there), the form still takes the users tele incase the organiser wants to confirm the attendee wants to come on the day itself but is late.
@@ -164,7 +178,7 @@ Also when i say testing the live page above, the first checks were on the local 
 
 ## Verified in the first iteration
 
-- 19 local tests pass, including the SQL migration in embedded Postgres, access restrictions, retry safety, NUS-only email validation, capacity allocation, duplicate redemption, calendar time conversion, text escaping/Unicode line folding and invalid-date handling.
+- 21 local tests pass, including the SQL migration in embedded Postgres, access restrictions, retry safety, NUS-only email validation, capacity allocation, duplicate redemption, calendar time conversion, text escaping/Unicode line folding, invalid-date handling and isolation of the public demo account from real attendees.
 - TypeScript checking and the production build pass.
 - Browser preview exercised RSVP → ticket → organiser search → arrival → cup collection.
 - A downloaded Excel file was reopened and checked for the expected attendee and reservation data.

@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import {
   configurationError,
+  demoOrganiserMode,
+  resetDemoEvent,
   getEventSummary,
   hasOrganiserAccess,
   loadRsvps,
@@ -65,13 +67,19 @@ function App() {
         <p>Set both the Supabase URL and public key, or remove both to use local preview mode.</p>
       </main>
     );
-  const organiser = window.location.pathname.startsWith('/organiser');
+  const organiser = demoOrganiserMode || window.location.pathname.startsWith('/organiser');
   return (
     <>
       {previewMode && (
         <div className="preview-banner">
           <Sparkles size={13} />
           <span>Interactive preview · saved in this browser only · no emails sent</span>
+        </div>
+      )}
+      {demoOrganiserMode && (
+        <div className="preview-banner">
+          <Sparkles size={13} />
+          <span>Public organiser demo · fictional attendees only · shared test data</span>
         </div>
       )}
       {organiser && (
@@ -572,7 +580,9 @@ function OrganiserDesk({ summary }: { summary: EventSummary | null }) {
           <p>
             {previewMode
               ? 'Explore with three fictional attendees. This is a browser-local preview, not a secured live dashboard.'
-              : 'Only approved organisers can access attendee details.'}
+              : demoOrganiserMode
+                ? 'Use the demo credentials in the README. This account can only access fictional demo attendees.'
+                : 'Only approved organisers can access attendee details.'}
           </p>
           {previewMode ? (
             <button
@@ -657,6 +667,27 @@ function OrganiserDesk({ summary }: { summary: EventSummary | null }) {
         <button className="text-button" onClick={() => void refresh()}>
           <RefreshCw size={13} /> Refresh
         </button>
+        {demoOrganiserMode && (
+          <button
+            className="text-button"
+            disabled={busy || Boolean(activeId) || !connected}
+            onClick={async () => {
+              setBusy(true);
+              setError('');
+              try {
+                await resetDemoEvent();
+                await refresh();
+                setNotice('Demo reset to three fictional attendees.');
+              } catch (e) {
+                setError(errorMessage(e));
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            <RefreshCw size={13} /> {busy ? 'Resetting…' : 'Reset demo data'}
+          </button>
+        )}
       </div>
       <div className="stats-grid">
         <Stat

@@ -7,8 +7,25 @@ const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 export const configurationError = Boolean(url) !== Boolean(key);
 export const previewMode = !url && !key;
-export const supabase = url && key ? createClient(url, key) : null;
-export const eventId = import.meta.env.VITE_EVENT_ID || demoEvent.id;
+export const demoOrganiserMode = /^\/demo\/organiser\/?$/.test(window.location.pathname);
+// keep the public demo login separate from the owner's real organiser session
+export const supabase =
+  url && key
+    ? createClient(
+        url,
+        key,
+        demoOrganiserMode ? { auth: { storageKey: 'study-break-demo-auth' } } : undefined,
+      )
+    : null;
+export const eventId = demoOrganiserMode
+  ? '55555555-5555-4555-8555-555555555555'
+  : import.meta.env.VITE_EVENT_ID || demoEvent.id;
+
+export async function resetDemoEvent(): Promise<void> {
+  if (!demoOrganiserMode || previewMode) throw new Error('Use the hosted demo organiser page.');
+  const { error } = await supabase!.rpc('reset_demo_event');
+  if (error) throw new Error(error.message);
+}
 
 export async function getEventSummary(): Promise<EventSummary> {
   if (configurationError)

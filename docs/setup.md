@@ -6,7 +6,7 @@ The frontend runs without accounts or secrets in labelled local preview mode. Th
 
 Create a project in your own Supabase account. Save its project URL and public anon/publishable key. Never put a service-role key in a `VITE_` variable.
 
-Apply both files under `supabase/migrations/` in filename order, or use the Supabase CLI to apply pending migrations. The second migration adds exact `@u.nus.edu` validation and a database constraint. If upgrading a database containing non-NUS RSVPs, review those records first: the constraint will fail rather than silently delete attendees or change reservations. The migration creates one event with ID `11111111-1111-4111-8111-111111111111`. Its date is unset and registrations are closed.
+Apply all files under `supabase/migrations/` in filename order, or use the Supabase CLI to apply pending migrations. The third migration adds the separate fictional demo event and its restricted reset function. The second migration adds exact `@u.nus.edu` validation and a database constraint. If upgrading a database containing non-NUS RSVPs, review those records first: the constraint will fail rather than silently delete attendees or change reservations. The migration creates one event with ID `11111111-1111-4111-8111-111111111111`. Its date is unset and registrations are closed.
 
 The attendee list is protected with Row Level Security. Anonymous visitors can read only public event details and an aggregate reservation count. Only the server-side function can create an RSVP. Approved organisers can read attendee data and call the redemption function; they cannot directly rewrite arbitrary RSVP fields.
 

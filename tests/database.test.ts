@@ -24,6 +24,12 @@ before(async () => {
       'utf8',
     ),
   );
+  await db.exec(
+    readFileSync(
+      new URL('../supabase/migrations/202611090003_demo_organiser.sql', import.meta.url),
+      'utf8',
+    ),
+  );
 });
 after(() => db.close());
 
@@ -177,5 +183,62 @@ test('database constraint also rejects a direct non-NUS insert', async () => {
         [id, crypto.randomUUID()],
       ),
     /rsvps_nus_student_email/,
+  );
+});
+
+const demoId = '55555555-5555-4555-8555-555555555555';
+test('demo organiser only sees fictional attendees and cannot redeem a real ticket', async () => {
+  const demoUser = '44444444-4444-4444-8444-444444444444';
+  await db.query('insert into auth.users values ($1)', [demoUser]);
+  await db.query('insert into public.organisers values ($1,$2)', [demoId, demoUser]);
+  const realId = await event();
+  const realTicket = await reserve(realId, 'private-real@u.nus.edu');
+  await asUser('authenticated', demoUser, async () => {
+    const visible = await db.query<{ event_id: string; id: string }>(
+      'select * from public.rsvps order by ticket_code',
+    );
+    assert.equal(visible.rows.length, 3);
+    assert.ok(visible.rows.every((row) => row.event_id === demoId));
+    await assert.rejects(
+      () => db.query('select public.redeem_ticket($1,$2)', [realTicket.id, 'arrive']),
+      /Organiser access required/,
+    );
+    await assert.rejects(
+      () => db.query('insert into public.organisers values ($1,$2)', [realId, demoUser]),
+      /permission denied/,
+    );
+    await db.query('select public.redeem_ticket($1,$2)', [visible.rows[0].id, 'arrive']);
+    await db.query('select public.redeem_ticket($1,$2)', [visible.rows[0].id, 'cup']);
+    await db.query('select public.reset_demo_event()');
+    const reset = await db.query<{
+      event_id: string;
+      checked_in_at: string | null;
+      cup_collected_at: string | null;
+    }>('select * from public.rsvps');
+    assert.equal(reset.rows.length, 3);
+    assert.equal(reset.rows.filter((row) => row.checked_in_at).length, 2);
+    assert.equal(reset.rows.filter((row) => row.cup_collected_at).length, 1);
+    assert.ok(reset.rows.every((row) => row.event_id === demoId));
+  });
+  assert.equal(
+    (await db.query('select id from public.rsvps where id=$1', [realTicket.id])).rows.length,
+    1,
+  );
+});
+
+test('demo reset is blocked for anonymous and unrelated users, and demo registrations stay closed', async () => {
+  await asUser('anon', '', async () => {
+    await assert.rejects(() => db.query('select public.reset_demo_event()'), /permission denied/);
+  });
+  await asUser('authenticated', strangerId, async () => {
+    await assert.rejects(
+      () => db.query('select public.reset_demo_event()'),
+      /Demo organiser access required/,
+    );
+  });
+  await assert.rejects(() => reserve(demoId, 'new-person@u.nus.edu'), /not open yet/);
+  await assert.rejects(
+    () => db.query('update public.events set reservations_open=true where id=$1', [demoId]),
+    /demo_event_stays_closed/,
   );
 });
