@@ -1,12 +1,12 @@
 # Study Break Night 🧋
 
-**[Open the repository](https://github.com/shounakm4/study-break-night)** · Local preview: `http://127.0.0.1:5174`
+**[Open the app](https://study-break-night.vercel.app)** · [Repository](https://github.com/shounakm4/study-break-night) · Local development: `http://127.0.0.1:5174`
 
 A phone-friendly RSVP and check-in app for a NUS Students’ Computing Club study break at COM1 foyer, 7–9 pm. Attendees do not create accounts. Organisers share a private, live dashboard.
 
-Built for the Events Tech recruitment exercise. This is a student prototype, not an official club deployment. The event date must be confirmed before opening real registrations.
+Built for the Events Tech recruitment exercise. This is a student prototype, not an official club deployment. The deployed event uses the assumed date of 12 November 2026, 7–9 pm Singapore time.
 
-**Current status:** the app runs in browser-local preview mode. The shared Supabase backend and email integration are written but still need configuration and live verification. Preview RSVPs send no email, and different phones do not share preview data.
+**Current status:** the Vercel site is connected to a live Supabase database in Singapore. Registration and organiser access are configured. Resend reports a confirmation email as delivered to the account owner during an isolated test. There is no verified sender domain yet, so Resend currently permits email only to the Resend account address. Other attendees must save their on-screen ticket until a sender domain is verified. Local development without Supabase configuration still uses browser-local preview mode.
 
 ## Why I chose this approach
 
@@ -128,10 +128,10 @@ Frontend variables contain only the Supabase URL, publishable/anon key and event
 
 ## Scope and limitations
 
-- The event date is initially unconfirmed. Snack quantities are planned by organisers from RSVP totals.
+- The deployed event date is an assumption: 12 November 2026. Snack quantities are planned by organisers from RSVP totals.
 - No Telegram automation, stamp rally, QR scanning, payments, cancellation workflow or offline redemption. Ticket codes are searchable; QR scanning can follow later.
 - A ticket is a bearer credential; one-time redemption prevents reuse, not sharing before first collection. Organisers can compare the displayed name with the attendee.
-- Email may be delayed or filtered. The on-screen ticket remains valid.
+- A verified sender domain is still needed for confirmation emails to arbitrary attendees. Resend’s test sender permits only the account email. Email may also be delayed or filtered; the on-screen ticket remains valid.
 - Public RSVP endpoints need abuse controls; capacity transactions do not prove identity.
 - The live deployment must be tested with two organiser phones and competing requests before real use. Local tests do not establish hosted service performance or email deliverability.
 
@@ -143,7 +143,7 @@ As a events tech, with not much time(esp w a pile of my own tutorials waiting fo
 
 To be specific, codex helped write the react components, database setup, backend functions, tests and readme(including helping with this note). One assumption i had to correct was the snack quota, cuz we only need the RSVP count to estimate food, not reserve a fixed number of snacks.
 
-Also when i say testing the live page above, so far thats the local browser preview. Supabase and email still need to be connected, so no emails are being sent yet and the preview data isnt shared across phones. Codex ran the automated checks, but i still need to test with multiple phones and ppl registering at the same time once the backend is connected.
+Also when i say testing the live page above, the first checks were on the local browser preview. The app is now deployed on vercel and connected to supabase, and resend accepted a test confirmation to the account email. I still need a verified sender domain for emails to everyone else, and i still need to check the full flow across multiple phones. Codex ran the automated checks and the hosted checks listed below.
 
 ## References
 
@@ -160,4 +160,14 @@ Also when i say testing the live page above, so far thats the local browser prev
 - Browser preview exercised RSVP → ticket → organiser search → arrival → cup collection.
 - A downloaded Excel file was reopened and checked for the expected attendee and reservation data.
 - Attendee and organiser pages were visually checked at 390px phone width with no horizontal overflow.
-- Live Supabase, actual email delivery, cross-device hosted updates and Vercel deployment remain unverified until those accounts are configured.
+
+## Live deployment checks
+
+- Vercel production is reachable at [study-break-night.vercel.app](https://study-break-night.vercel.app), including direct loads of `/organiser`.
+- Both database migrations were applied through the Supabase SQL editor. The public event summary returns the shared count, and anonymous attendee-list access is blocked.
+- The hosted registration function rejects non-NUS emails and respects closed registrations (checked before setting the event date).
+- A hosted transaction allocated exactly 150 cups across 151 fictional registrations and preserved the count on retry. These verification rows were rolled back.
+- On a separate test event, Resend accepted a confirmation to the account email. Retrying returned the same ticket; a case-variant duplicate was rejected and only one cup remained reserved.
+- Resend reports the test email as delivered; inbox placement still needs recipient confirmation. Multi-phone dashboard updates and competing hosted requests remain to be checked.
+
+See [deployment notes](docs/deployment.md) for the configured services, email restriction and future deployment steps.

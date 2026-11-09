@@ -318,7 +318,7 @@ function AttendeePage({
                   <small>
                     {previewMode
                       ? 'Use your @u.nus.edu address. Preview mode does not send email.'
-                      : 'Use your @u.nus.edu address. Your confirmation ticket goes here.'}
+                      : 'Use your @u.nus.edu address. Save the ticket shown after RSVP.'}
                   </small>
                   <label htmlFor="telegram">
                     Telegram handle <em>optional</em>
