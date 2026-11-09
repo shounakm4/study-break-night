@@ -6,6 +6,18 @@ A phone-friendly RSVP and check-in app for a NUS Students’ Computing Club stud
 
 Built for the Events Tech recruitment exercise. This is a student prototype, not an official club deployment. The event date must be confirmed before opening real registrations.
 
+**Current status:** the app runs in browser-local preview mode. The shared Supabase backend and email integration are written but still need configuration and live verification. Preview RSVPs send no email, and different phones do not share preview data.
+
+## Why I chose this approach
+
+I chose this setup because the organiser needs a simple registration and RSVP workflow. Attendees should be able to read the event details, register and get their ticket without creating an account. React handles the page, and Supabase provides the shared database and organiser login once connected.
+
+The Telegram messaging part would have added too much setup for the short time frame, so I chose confirmation emails to NUS student addresses instead. The email integration is prepared but is not sending messages in the current preview. The form still takes an optional Telegram handle in case an organiser needs to contact someone about the event, for example to check whether a late attendee is still coming.
+
+I kept the page simple and added a few fun elements, including bubble tea and students taking a break. The illustrations are AI-generated. I expect someone to spend around two minutes on the RSVP page to register and get the event information, so I wanted the form to stay easy to find and quick to complete.
+
+The organiser dashboard gives the committee RSVP numbers for estimating snack quantities and a way to check people in on the day. Only organisers need to log in, and they can also use the dashboard beforehand for planning. They search for an attendee by name, email or ticket code, confirm the matching ticket, then record arrival and cup collection. Searching a name alone does not authenticate someone. With more time, I would add a QR code to the confirmation email so organisers could scan tickets at the door.
+
 ## Attendee flow
 
 1. Open the event page and read the date, venue and reservation policy.
@@ -53,6 +65,18 @@ flowchart TD
 - **Email:** a Supabase Edge Function calls Resend after reserving successfully. Provider secrets remain on the server. Email status distinguishes accepted, failed and not configured; accepted is not a guarantee of inbox delivery.
 - **Live counts:** authenticated database subscriptions trigger fresh reads. Live UI updates do not replace transactional correctness.
 - **Exports:** an on-demand .xlsx snapshot of the organiser’s current event data.
+
+## Registration and check-in logic
+
+1. **Validate the form.** A name, an email ending in exactly `@u.nus.edu`, and consent are required. The Telegram handle is optional. The email is trimmed and converted to lowercase, so capitalisation or surrounding spaces cannot create another RSVP.
+2. **Prevent duplicates.** Each event allows one RSVP per normalised email. Retrying the same submission returns its existing receipt without using another cup. A new submission with an already registered email is rejected without revealing that attendee’s ticket.
+3. **Allocate the cup in the database.** In live mode, the registration function locks the event row while checking capacity and saving the RSVP. Requests for the final cup are processed in order, so two successful registrations cannot both reserve it. The first 150 successful RSVPs receive one reserved cup each.
+4. **Keep counting after cups run out.** Further RSVPs are accepted without a bubble-tea reservation. They still count toward attendance estimates. There is no snack quota or guaranteed snack reservation; the committee uses the total RSVP count to plan its order.
+5. **Save first, then attempt email.** In configured live mode, the server saves the RSVP before asking Resend to email the event details, ticket code and cup reservation status. The page displays the ticket even if email fails or is not configured. An email failure does not erase the RSVP or allocate another cup on retry. The page distinguishes email accepted, failed and not configured.
+6. **Record arrival separately from collection.** An approved organiser checks the ticket and marks the attendee as arrived. When a reserved cup is handed over, they mark it collected. The live database checks permissions and prevents that ticket from collecting a second cup, including when two organisers try at once.
+7. **Refresh the organiser dashboard.** In live mode, Supabase Realtime notifications trigger fresh reads of the shared data. Excel downloads are snapshots for planning or records; editing an exported file does not change registrations or stock.
+
+Preview mode uses browser storage to demonstrate these flows. Its duplicate and capacity checks apply only within that browser; the shared database rules apply once Supabase is connected. The live locking behaviour still needs testing with competing requests and multiple phones.
 
 ## Counts and reservation rules
 
@@ -109,9 +133,15 @@ Frontend variables contain only the Supabase URL, publishable/anon key and event
 - Public RSVP endpoints need abuse controls; capacity transactions do not prove identity.
 - The live deployment must be tested with two organiser phones and competing requests before real use. Local tests do not establish hosted service performance or email deliverability.
 
-## How AI was used
+## AI note
 
-Codex helped plan the flows and write the initial README, UI, database migration, functions and checks. Shounak is iterating on the design and behaviour. This is substantial AI assistance; the code should be reviewed and understood before submission. One correction during this iteration: the initial GitHub push used a rejected SSH key; Codex switched this repository to authenticated HTTPS. Snack quota assumptions were also removed after Shounak clarified that RSVP counts should drive snack ordering. Keep this note updated with actual changes and corrections.
+To be very honest, I completely vibe coded this app with Codex, using iterative UI and logic development and repeatedly testing the local preview page. Codex helped write the React UI, database migrations, backend functions, tests and documentation, including helping me edit this note. This was substantial code generation, not just autocomplete.
+
+As an events tech member with limited time (especially with a pile of my own tutorials waiting for me 😭), this is the workflow I would go for, provided I can understand the backend logic and test that the app achieves the organiser’s objective. This would not have been possible in the intended 2–3 hour window without my best friend, Codex. I directed the design changes and behaviour through feedback, including the club colours, simpler form, email restrictions and dashboard workflow.
+
+One assumption I corrected during development was snack allocation: the app initially treated snacks as a limited reservation, but the organiser needs RSVP numbers to decide how much food to order. I removed the snack quota while keeping the 150-cup reservation limit.
+
+I have tested the local preview through registration and check-in, and Codex ran the automated checks listed below. Testing the preview repeatedly is different from testing a live event with multiple users. Supabase, actual email delivery and cross-phone updates still need to be configured and verified before I can claim that workflow works in real use. I am responsible for understanding and reviewing the generated code, including the allocation, duplicate-email and organiser-access rules.
 
 ## References
 
