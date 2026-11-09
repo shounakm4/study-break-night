@@ -24,11 +24,11 @@ For this trial i decided not to buy a domain just for sending emails, so attende
 
 ## Attendee flow
 
-1. Open the event page and read the date, venue and reservation policy. Use **Add to calendar** below the event details to download an `.ics` file with the event time, venue and public page link. Saving it does not create an RSVP.
+1. Open the event page and read the date, venue and reservation policy.
 2. Enter a name, NUS student email ending in `@u.nus.edu`, and optional Telegram handle. The handle is for manual event-related contact by organisers; no Telegram bot is used.
 3. Submit an RSVP without logging in.
 4. The backend atomically reserves one cup if fewer than 150 active cup reservations exist. Total RSVPs help organisers decide how many snacks to order; snacks have no app-enforced quota.
-5. See a ticket code and exact entitlements immediately. For this trial, save a screenshot or keep the code to show at the door. Once a sender domain is verified, confirmations can also be emailed to other attendees.
+5. See a ticket code and exact entitlements immediately. For this trial, save a screenshot or keep the code to show at the door. **Add to calendar** is available only on this confirmation screen after a successful RSVP, and downloads an `.ics` file with the event time, venue and public page link. Once a sender domain is verified, confirmations can also be emailed to other attendees.
 6. Show the ticket at the door. Organisers record arrival and food collection separately.
 7. If cups are fully reserved, attendance is still allowed. The confirmation clearly says no bubble tea is reserved; it does not promise unavailable snacks.
 

@@ -208,11 +208,6 @@ function AttendeePage({
               <span>We’ll confirm the date before real RSVPs open.</span>
             )}
           </div>
-          {calendarText && (
-            <button className="button secondary calendar-download" onClick={downloadCalendar}>
-              <CalendarDays size={17} /> Add to calendar
-            </button>
-          )}
           <img
             className="study-illustration"
             src="/study-break-students.svg"
@@ -273,6 +268,11 @@ function AttendeePage({
                       : 'Attendance confirmed · no bubble tea reserved'}
                   </span>
                 </div>
+                {calendarText && (
+                  <button className="button secondary calendar-download" onClick={downloadCalendar}>
+                    <CalendarDays size={17} /> Add to calendar
+                  </button>
+                )}
                 <p className="small-note">
                   {previewMode
                     ? 'Preview ticket only. No email was sent.'
