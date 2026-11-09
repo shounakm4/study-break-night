@@ -22,15 +22,20 @@ For the bbt count, each nus email can only RSVP once per event and the backend d
 
 For this trial i decided not to buy a domain just for sending emails, so attendees need to save the on-screen confirmation(a screenshot is the easiest way, or they can just keep the ticket code). Their RSVP and bbt reservation are still saved in the backend even if they close the page, the screenshot is just to show the ticket at the door. If they lose it they can ask an organiser to look up their registration and verify their details. Email to other attendees is a future addition once a sender domain is available, so thats also what i would promise in my tele reply for now.
 
+I also added an Add to calendar button after the RSVP is confirmed, so ppl can download an .ics file and save the event without typing the date and time themselves. It uses the event details from the app, including the Singapore timing and COM1 foyer. The calendar entry is just a reminder, they still need their ticket for check in. If the organiser changes the details later they would need to download it again, it doesnt update itself.
+
+The main page now has the message "hearsay snacks are included as well...👀😋" below the event details. Just a small fun addition so ppl know about the snacks too, but theres still no fixed snack reservation per person cuz the RSVP numbers are what the comm uses to plan the order.
+
 ## Attendee flow
 
 1. Open the event page and read the date, venue and reservation policy.
 2. Enter a name, NUS student email ending in `@u.nus.edu`, and optional Telegram handle. The handle is for manual event-related contact by organisers; no Telegram bot is used.
 3. Submit an RSVP without logging in.
 4. The backend atomically reserves one cup if fewer than 150 active cup reservations exist. Total RSVPs help organisers decide how many snacks to order; snacks have no app-enforced quota.
-5. See a ticket code and exact entitlements immediately. For this trial, save a screenshot or keep the code to show at the door. **Add to calendar** is available only on this confirmation screen after a successful RSVP, and downloads an `.ics` file with the event time, venue and public page link. Once a sender domain is verified, confirmations can also be emailed to other attendees.
-6. Show the ticket at the door. Organisers record arrival and food collection separately.
-7. If cups are fully reserved, attendance is still allowed. The confirmation clearly says no bubble tea is reserved; it does not promise unavailable snacks.
+5. See a ticket code and exact entitlements immediately. The confirmation displays **Screenshot your ticket before closing this page 📸** and asks attendees to show it to an organiser on arrival. Save the screenshot or use **Copy code** to keep the ticket code. Once a sender domain is verified, confirmations can also be emailed to other attendees.
+6. Optionally use **Add to calendar**, available only on this confirmation screen after a successful RSVP. It downloads `study-break.ics` with the event title, date, start/end time, venue and public page link. The calendar file does not replace the check-in ticket or create another RSVP.
+7. Show the ticket at the door. Organisers record arrival and food collection separately.
+8. If cups are fully reserved, attendance is still allowed. The confirmation clearly says no bubble tea is reserved; it does not promise unavailable snacks.
 
 A lost email does not cancel the RSVP. Retrying the same request must not create a second reservation. An unrelated request using an already registered email must not reveal the existing ticket.
 
@@ -69,6 +74,7 @@ flowchart TD
 - **Email:** a Supabase Edge Function calls Resend after reserving successfully. Provider secrets remain on the server. Email status distinguishes accepted, failed and not configured; accepted is not a guarantee of inbox delivery.
 - **Live counts:** authenticated database subscriptions trigger fresh reads. Live UI updates do not replace transactional correctness.
 - **Exports:** an on-demand .xlsx snapshot of the organiser’s current event data.
+- **Calendar download:** the browser creates an iCalendar (`.ics`) file from the stored event details after RSVP confirmation. Times are exported in UTC so calendar apps can display the correct local time (7–9 pm in Singapore for this event). The file includes no attendee email or ticket code. Text is escaped and long lines are folded for calendar compatibility. No extra backend request, email service or account login is needed to download it.
 
 ## Registration and check-in logic
 
@@ -131,6 +137,7 @@ Frontend variables contain only the Supabase URL, publishable/anon key and event
 ## Scope and limitations
 
 - The deployed event date is an assumption: 12 November 2026. Snack quantities are planned by organisers from RSVP totals.
+- Downloaded calendar entries are snapshots. Changes to the event do not automatically update an imported calendar entry; download the updated file again. The calendar button is hidden when either event timestamp is missing or invalid.
 - No Telegram automation, stamp rally, QR scanning, payments, cancellation workflow or offline redemption. Ticket codes are searchable; QR scanning can follow later.
 - A ticket is a bearer credential; one-time redemption prevents reuse, not sharing before first collection. Organisers can compare the displayed name with the attendee.
 - A verified sender domain is still needed for confirmation emails to arbitrary attendees. Resend’s test sender permits only the account email. Email may also be delayed or filtered; the on-screen ticket remains valid.
@@ -157,10 +164,12 @@ Also when i say testing the live page above, the first checks were on the local 
 
 ## Verified in the first iteration
 
-- 19 local tests pass, including the SQL migration in embedded Postgres, access restrictions, retry safety, NUS-only email validation, capacity allocation and duplicate redemption.
+- 19 local tests pass, including the SQL migration in embedded Postgres, access restrictions, retry safety, NUS-only email validation, capacity allocation, duplicate redemption, calendar time conversion, text escaping/Unicode line folding and invalid-date handling.
 - TypeScript checking and the production build pass.
 - Browser preview exercised RSVP → ticket → organiser search → arrival → cup collection.
 - A downloaded Excel file was reopened and checked for the expected attendee and reservation data.
+- A separate browser preview confirmed that **Add to calendar** is absent before RSVP and appears after confirmation. Its downloaded file was checked for 12 November 2026, 7–9 pm Singapore time, COM1 foyer and valid calendar delimiters. No real RSVP counts were changed by this preview check.
+- The screenshot reminder was verified on the confirmation screen. The snack teaser was checked on the deployed main page.
 - Attendee and organiser pages were visually checked at 390px phone width with no horizontal overflow.
 
 ## Live deployment checks
