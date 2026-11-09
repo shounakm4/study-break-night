@@ -150,7 +150,7 @@ To be very honest, i completely vibe coded this app while using iterative UI and
 
 As a events tech, with not much time(esp w a pile of my own tutorials waiting for me😭) i believe this is the workflow i would go for as long as i am able to test it and check it works with multiple users and it achieves the objective, so yes this would not have been possible in the span of 2-3 hours without the help of my best friend(codex) but i believe as long as i am aware of the backend logic and personally enhance UI then it should be ok.
 
-To be specific, codex helped write the react components, database setup, backend functions, tests and readme(including helping with this note). One assumption i had to correct was the snack quota, cuz we only need the RSVP count to estimate food, not reserve a fixed number of snacks.
+To be specific, codex helped write the react components, database setup, backend functions, tests and most of the readme. One assumption i had to correct was the snack quota, cuz we only need the RSVP count to estimate food, not reserve a fixed number of snacks.
 
 Also when i say testing the live page above, the first checks were on the local browser preview. The app is now deployed on vercel and connected to supabase, and resend accepted a test confirmation to the account email. I still need a verified sender domain for emails to everyone else, and i still need to check the full flow across multiple phones. Codex ran the automated checks and the hosted checks listed below.
 
