@@ -20,13 +20,15 @@ For the setup i went with react for the webpage and supabase for the shared data
 
 For the bbt count, each nus email can only RSVP once per event and the backend decides who gets the last cup, so two ppl registering together cant both get cup number 150. Once all 150 are reserved ppl can still RSVP without bbt, and they still count towards the food estimate. At the door the organiser should confirm the ticket as well, typing a name is just to find the registration.
 
+For this trial i decided not to buy a domain just for sending emails, so attendees need to save the on-screen confirmation(a screenshot is the easiest way, or they can just keep the ticket code). Their RSVP and bbt reservation are still saved in the backend even if they close the page, the screenshot is just to show the ticket at the door. If they lose it they can ask an organiser to look up their registration and verify their details. Email to other attendees is a future addition once a sender domain is available, so thats also what i would promise in my tele reply for now.
+
 ## Attendee flow
 
 1. Open the event page and read the date, venue and reservation policy.
 2. Enter a name, NUS student email ending in `@u.nus.edu`, and optional Telegram handle. The handle is for manual event-related contact by organisers; no Telegram bot is used.
 3. Submit an RSVP without logging in.
 4. The backend atomically reserves one cup if fewer than 150 active cup reservations exist. Total RSVPs help organisers decide how many snacks to order; snacks have no app-enforced quota.
-5. See a ticket code and exact entitlements immediately. Once email delivery is configured, receive the same event details and ticket by email.
+5. See a ticket code and exact entitlements immediately. For this trial, save a screenshot or keep the code to show at the door. Once a sender domain is verified, confirmations can also be emailed to other attendees.
 6. Show the ticket at the door. Organisers record arrival and food collection separately.
 7. If cups are fully reserved, attendance is still allowed. The confirmation clearly says no bubble tea is reserved; it does not promise unavailable snacks.
 
