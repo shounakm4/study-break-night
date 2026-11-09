@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 250" fill="none">
+  <title>Students taking a study break with bubble tea</title>
+  <g stroke="#365486" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 222H496" stroke="#dce8f6"/>
+    <path d="M130 194H456M146 195V222M442 195V222"/>
+    <path d="M280 201L268 220H307" fill="#365486"/>
+    <path d="M393 201L412 220H447" fill="#365486"/>
+    <path d="M236 150L246 191L285 199L300 176" fill="#b8d9f5"/>
+    <path d="M416 147L408 191L389 204L370 177" fill="#b8d9f5"/>
+    <path d="M271 165L305 178L301 207H279L277 187L245 181" fill="#365486"/>
+    <path d="M379 162L354 179L370 207H394L382 184L410 178" fill="#365486"/>
+    <path d="M278 208H301L307 220H275Z" fill="#fff"/>
+    <path d="M371 208H394L400 220H369Z" fill="#fff"/>
+    <path d="M243 104Q264 97 283 110L294 161Q267 180 238 162Z" fill="#61afef"/>
+    <path d="M386 105Q410 100 427 116L419 164Q389 174 370 158Z" fill="#edf5fc"/>
+    <path d="M250 108L240 139L267 148L274 135" fill="#f1d1b4"/>
+    <path d="M283 116L296 135L320 116L327 123L297 151Q290 151 277 138" fill="#f1d1b4"/>
+    <path d="M390 113L378 137L350 126L347 137L379 155Q386 157 398 139" fill="#f1d1b4"/>
+    <path d="M419 118L434 149L412 164L402 156L417 144L409 133" fill="#f1d1b4"/>
+    <path d="M249 99L252 108Q261 117 268 105L267 94" fill="#f1d1b4"/>
+    <path d="M395 99L394 108Q402 117 411 107L409 96" fill="#f1d1b4"/>
+    <path d="M242 68Q235 90 248 99Q265 111 277 92L278 72" fill="#f1d1b4"/>
+    <path d="M240 79Q228 67 241 55Q257 41 273 55Q287 59 280 82L269 77L267 65Q253 77 240 72Z" fill="#365486"/>
+    <path d="M249 86H250M266 86H267M256 96Q261 99 264 94"/>
+    <path d="M387 71Q382 91 395 101Q414 108 421 88L418 68" fill="#f1d1b4"/>
+    <path d="M387 79Q375 57 392 50Q416 41 425 62L423 100L413 98L419 77Q398 73 394 62L389 79Z" fill="#365486"/>
+    <path d="M395 85H396M409 84H410M399 95Q405 98 408 93"/>
+    <path d="M313 119L315 142Q323 147 331 141L333 119" fill="#e9c6a2"/>
+    <path d="M311 118H335M326 109L323 130"/>
+    <path d="M319 136H320M326 137H327" stroke-width="4"/>
+    <path d="M343 127L345 147Q352 151 359 146L361 127" fill="#e9c6a2"/>
+    <path d="M341 126H363M355 115L352 136"/>
+    <path d="M350 143H351M355 142H356" stroke-width="4"/>
+    <path d="M296 56Q325 38 352 51M298 58L303 46M298 58L311 58" stroke="#61afef"/>
+    <path d="M184 77L191 70M187 98H197M169 62V52" stroke="#61afef"/>
+    <path d="M454 68L460 61M470 88H479M451 46V37" stroke="#61afef"/>
+    <path d="M40 104L54 218Q91 232 132 218L146 104" fill="#ecd2b4"/>
+    <path d="M47 107L57 197" stroke="#fff8ec" stroke-width="7"/>
+    <path d="M38 106Q90 118 148 105L146 94Q93 82 40 95Z" fill="#edf5fc"/>
+    <path d="M105 48L94 155" stroke="#365486" stroke-width="10"/>
+    <path d="M102 54L107 48M100 78L105 72M98 102L102 96" stroke="#91c5ef" stroke-width="5"/>
+    <ellipse cx="92" cy="159" rx="29" ry="25" fill="#fff8ec" stroke="#365486" stroke-width="1.8"/>
+    <path d="M79 154H100V166Q90 176 79 166ZM101 156H105Q113 163 101 165M85 145L87 139M94 146L96 140" stroke-width="2"/>
+  </g>
+  <g fill="#365486">
+    <circle cx="67" cy="202" r="6"/><circle cx="84" cy="207" r="6"/><circle cx="103" cy="203" r="6"/><circle cx="119" cy="209" r="6"/>
+    <circle cx="76" cy="219" r="5.5"/><circle cx="94" cy="220" r="5.5"/><circle cx="111" cy="221" r="5.5"/>
+  </g>
+  <path d="M170 174L179 168L188 174L183 184H175Z" fill="#61afef"/>
+  <path d="M463 160L469 154L475 160L469 166Z" fill="#b8d9f5"/>
+</svg>

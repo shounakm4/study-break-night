@@ -96,6 +96,47 @@ h1 {
   margin-bottom: 17px;
   font-weight: 700;
 }
+.study-title {
+  position: relative;
+  display: inline-block;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 70px;
+  letter-spacing: -0.055em;
+  margin-bottom: 24px;
+}
+.title-underline {
+  position: absolute;
+  left: 0;
+  bottom: -9px;
+  width: 100%;
+  height: 17px;
+  overflow: visible;
+  fill: none;
+  stroke: #c7a67f;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.study-illustration {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+  margin-top: 25px;
+}
+.footer-organiser {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--navy);
+  line-height: 1.6;
+}
+.footer-organiser img {
+  width: 22px;
+  height: auto;
+  flex-shrink: 0;
+}
 .event-organiser {
   font-size: 16px;
   line-height: 1.65;
@@ -871,6 +912,21 @@ form > small {
   h1 {
     font-size: 46px;
     margin-bottom: 12px;
+  }
+  .study-title {
+    font-size: clamp(42px, 12vw, 54px);
+    margin-bottom: 22px;
+  }
+  .study-illustration {
+    width: min(100%, 330px);
+    margin: 20px auto 0;
+  }
+  .footer-organiser {
+    max-width: 240px;
+    gap: 7px;
+  }
+  .footer-organiser img {
+    width: 19px;
   }
   .event-organiser {
     font-size: 14px;

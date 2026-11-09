@@ -100,7 +100,10 @@ function App() {
         <AttendeePage summary={summary} refresh={refresh} />
       )}
       <footer className="site-footer wrap">
-        <span>Study Break · Student recruitment prototype</span>
+        <span className="footer-organiser">
+          <img src="/comclub-logo.webp" alt="Computing Club logo" />
+          <span>Organised by NUS Student's Comp Club</span>
+        </span>
         {!organiser && <a href="/organiser">Organiser sign in</a>}
       </footer>
     </>
@@ -172,7 +175,12 @@ function AttendeePage({
             src="/comclub-logo.webp"
             alt="NUS Students’ Computing Club logo"
           />
-          <h1>Study Break</h1>
+          <h1 className="study-title">
+            Study Break
+            <svg className="title-underline" viewBox="0 0 360 18" aria-hidden="true">
+              <path d="M5 13Q175 1 355 11" />
+            </svg>
+          </h1>
           <p className="event-organiser">Organised by NUS Student's Computing Club</p>
           <div className="event-pills">
             <span>
@@ -189,6 +197,11 @@ function AttendeePage({
               <span>We’ll confirm the date before real RSVPs open.</span>
             )}
           </div>
+          <img
+            className="study-illustration"
+            src="/study-break-students.svg"
+            alt="Two students taking a break together with bubble tea"
+          />
         </div>
         <div className="rsvp-column" id="rsvp">
           <div className="rsvp-card">
